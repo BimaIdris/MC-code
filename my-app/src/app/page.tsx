@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getRole } from "@/utils/roles";
 
 const home = async () => {
   const { userId } = await auth();
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId!);
+  const role = user.publicMetadata?.role as string | undefined;
+
+  //const user = await client.users.getUser(userId);
+  //role = (user as any)?.publicMetadata?.role;
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gray-100 px-4">
@@ -18,7 +25,7 @@ const home = async () => {
           <div className="flex justify-center gap-4 mt-4">
             {userId ? (
               <>
-                <Link href="/dashboard">
+                <Link href={`/${role}`}>
                   <Button>Go to Dashboard</Button>
                 </Link>
               </>

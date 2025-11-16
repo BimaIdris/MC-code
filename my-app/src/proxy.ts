@@ -28,7 +28,7 @@ export default clerkMiddleware(async (auth, req) => {
     (sessionClaims as any)?.publicMetadata?.role ??
     (sessionClaims as any)?.privateMetadata?.role ??
     (sessionClaims as any)?.role;
-
+  //console.log("Role from session claims:", roleFromSession);
   let role: string | undefined = roleFromSession;
 
   // If no role in session claims, try fetching the user object (server-side) as a fallback
@@ -41,9 +41,12 @@ export default clerkMiddleware(async (auth, req) => {
         (user as any)?.privateMetadata?.role ??
         (user as any)?.metadata?.role ??
         (user as any)?.role;
+
+      //console.log((user as any)?.privateMetadata?.role);
     } catch (err) {
       console.warn("Could not fetch user for role fallback", err);
     }
+    console.log("Role from user object fallback:", role);
   }
 
   // Normalize role strings and handle known alias
