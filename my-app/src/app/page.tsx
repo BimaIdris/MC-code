@@ -1,19 +1,10 @@
 import Link from "next/link";
-import {
-  RegisterLink,
-  LoginLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { auth } from "@clerk/nextjs/server";
 
 const home = async () => {
-  const { isAuthenticated, getUser } = getKindeServerSession(); //useAuth();
-  const user = getUser();
-  console.log("User Info:", user);
-  // if (!(await isAuthenticated())) {
-  //   redirect("api/auth/login");
-  // }
+  const { userId } = await auth();
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gray-100 px-4">
@@ -25,7 +16,7 @@ const home = async () => {
             This is a protected homepage. Authentication is powered by Kinde.
           </p>
           <div className="flex justify-center gap-4 mt-4">
-            {isAuthenticated() ? (
+            {userId ? (
               <>
                 <Link href="/dashboard">
                   <Button>Go to Dashboard</Button>
@@ -33,15 +24,15 @@ const home = async () => {
               </>
             ) : (
               <>
-                <LoginLink>
-                  <button className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    Login
-                  </button>
-                </LoginLink>
-                <Link href="#">
-                  <button className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                <Link href="/sign-up">
+                  <Button className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                     Register
-                  </button>
+                  </Button>
+                </Link>
+                <Link href="sign-in">
+                  <Button className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    Login to account
+                  </Button>
                 </Link>
               </>
             )}

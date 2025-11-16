@@ -24,7 +24,6 @@ enum Role {
   DOCTOR
   LAB_TECHNICIAN
   PATIENT
-  CASHIER
 }
 
 enum Status {
